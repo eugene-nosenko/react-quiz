@@ -9,8 +9,8 @@ class Quiz extends Component {
   render() {
     return (
       <div className={classes.Quiz}>
-        <h1>Quiz</h1>
-        <div>
+        <div className={classes.QuizWrapper}>
+          <h1>Quiz</h1>
           <ActiveQuiz />
         </div>
       </div>
