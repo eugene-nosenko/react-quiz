@@ -5,6 +5,7 @@ import FinishQuiz from "../../components/FinishQuiz/FinishQuiz";
 
 class Quiz extends Component {
   state = {
+    results: {}, // { [id]: 'success' || 'error' }
     isFinished: false,
     activeQuestion: 0,
     answerState: null, // { [id]: 'success' || 'error' }
@@ -67,11 +68,18 @@ class Quiz extends Component {
     }
 
     const question = this.state.quiz[this.state.activeQuestion];
+    const results = this.state.results;
 
     if (question.rightAnswerId === answerID) {
+      if (!results[question.id]) {
+        results[question.id] = "success";
+      }
+
       this.setState({
         answerState: { [answerID]: "success" },
+        results,
       });
+
       const timeout = setTimeout(() => {
         if (this.isQuizFinished()) {
           this.setState({ isFinished: true });
@@ -84,8 +92,10 @@ class Quiz extends Component {
         window.clearTimeout(timeout);
       }, 1000);
     } else {
+      results[question.id] = "error";
       this.setState({
         answerState: { [answerID]: "error" },
+        results: results,
       });
     }
   };
@@ -93,6 +103,16 @@ class Quiz extends Component {
   isQuizFinished() {
     return this.state.activeQuestion + 1 === this.state.quiz.length;
   }
+
+  retryHandler = () => {
+    this.setState({
+      activeQuestion: 0,
+      answerState: null,
+      isFinished: false,
+      results: {},
+    });
+  };
+
   render() {
     return (
       <div className={classes.Quiz}>
@@ -100,7 +120,11 @@ class Quiz extends Component {
           <h1>Ответьте на все вопросы</h1>
 
           {this.state.isFinished ? (
-            <FinishQuiz />
+            <FinishQuiz
+              results={this.state.results}
+              quiz={this.state.quiz}
+              onRetry={this.retryHandler}
+            />
           ) : (
             <ActiveQuiz
               answers={this.state.quiz[this.state.activeQuestion].answers}
