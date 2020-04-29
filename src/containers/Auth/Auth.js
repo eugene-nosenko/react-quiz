@@ -6,6 +6,7 @@ import is from "is_js";
 
 export default class Auth extends Component {
   state = {
+    isFormValid: false,
     formControls: {
       email: {
         value: "",
@@ -52,7 +53,7 @@ export default class Auth extends Component {
       isValid = value.trim() !== "" && isValid;
     }
     if (validation.email) {
-      isValid = is(value) && isValid;
+      isValid = is.email(value) && isValid;
     }
     if (validation.minLength) {
       isValid = value.length >= validation.minLength && isValid;
@@ -65,11 +66,19 @@ export default class Auth extends Component {
     console.log(`${controlName}: `, event.target.value);
     const formControls = { ...this.state.formControls };
     const control = { ...formControls[controlName] };
+
     control.value = event.target.value;
     control.touched = true;
     control.valid = this.validateControl(control.value, control.validation);
     formControls[controlName] = control;
-    this.setState({ formControls });
+
+    let isFormValid = true;
+
+    Object.keys(formControls).forEach((name) => {
+      isFormValid = formControls[name].valid;
+    });
+
+    this.setState({ formControls, isFormValid });
   };
 
   renderInputs() {
@@ -101,10 +110,18 @@ export default class Auth extends Component {
           <form onSubmit={this.submitHandler} className={classes.AuthFrom}>
             {this.renderInputs()}
 
-            <Button type="success" onClick={this.loginHandler}>
+            <Button
+              type="success"
+              onClick={this.loginHandler}
+              disabled={!this.state.isFormValid}
+            >
               Войти
             </Button>
-            <Button type="success" onClick={this.registerHandler}>
+            <Button
+              type="success"
+              onClick={this.registerHandler}
+              disabled={!this.state.isFormValid}
+            >
               Регистрация
             </Button>
           </form>
