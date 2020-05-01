@@ -4,20 +4,41 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 
 export default class QuizList extends Component {
+  state = {
+    quizes: [],
+    loading: true,
+  };
+
   renderQuizes() {
-    return [1, 2, 3].map((quiz, index) => {
+    return this.state.quizes.map((quiz) => {
       return (
-        <li key={index}>
-          <NavLink to={"/quiz/" + quiz}>Тест {quiz}</NavLink>
+        <li key={quiz.id}>
+          <NavLink to={"/quiz/" + quiz.id}>{quiz.name}</NavLink>
         </li>
       );
     });
   }
-  // console.log("Quiz ID", this.props.match.params.id);
-  componentDidMount() {
-    axios.get("/quiz.json").then((response) => {
-      console.log(response);
-    });
+
+  async componentDidMount() {
+    try {
+      const response = await axios.get("/quizes.json");
+
+      const quizes = [];
+
+      Object.keys(response.data).forEach((key, index) => {
+        quizes.push({
+          id: key,
+          name: `Тест №${index + 1}`,
+        });
+      });
+
+      this.setState({
+        quizes,
+        loading: false,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   render() {
