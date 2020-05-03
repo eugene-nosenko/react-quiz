@@ -104,7 +104,7 @@ export default class QuizCreator extends Component {
 
     try {
       await axios.post(
-        "https://quiz-app-68387.firebaseio.com/quizes.json",
+        `${process.env.REACT_APP_FIREBASE_DATABASE}/quizes.json`,
         this.state.quiz
       );
       this.setState({

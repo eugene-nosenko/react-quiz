@@ -22,7 +22,9 @@ export default class QuizList extends Component {
 
   async componentDidMount() {
     try {
-      const response = await axios.get("/quizes.json");
+      const response = await axios.get(
+        `${process.env.REACT_APP_FIREBASE_DATABASE}/quizes.json`
+      );
 
       const quizes = [];
 
