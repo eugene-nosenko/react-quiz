@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classes from "./QuizList.module.css";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
 export default class QuizList extends Component {
   renderQuizes() {
@@ -12,9 +13,13 @@ export default class QuizList extends Component {
       );
     });
   }
+  // console.log("Quiz ID", this.props.match.params.id);
   componentDidMount() {
-    console.log("Quiz ID", this.props.match.params.id);
+    axios.get("/quiz.json").then((response) => {
+      console.log(response);
+    });
   }
+
   render() {
     return (
       <div className={classes.QuizList}>
