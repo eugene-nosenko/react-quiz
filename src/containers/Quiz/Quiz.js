@@ -77,4 +77,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+// const mapDispatchToProps = {
+//   fetchQuizById,
+//   quizAnswerClick,
+//   retryQuiz,
+// };
+
 export default connect(mapStateToProps, mapDispatchToProps)(Quiz);
