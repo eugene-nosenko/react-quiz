@@ -3,7 +3,6 @@ import classes from "./Auth.module.css";
 import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import is from "is_js";
-
 import { connect } from "react-redux";
 import { auth } from "../../store/actions/auth";
 
@@ -78,7 +77,6 @@ class Auth extends Component {
   }
 
   onChangeHandler = (event, controlName) => {
-    console.log(`${controlName}: `, event.target.value);
     const formControls = { ...this.state.formControls };
     const control = { ...formControls[controlName] };
 
@@ -90,7 +88,7 @@ class Auth extends Component {
     let isFormValid = true;
 
     Object.keys(formControls).forEach((name) => {
-      isFormValid = formControls[name].valid;
+      isFormValid = formControls[name].valid && isFormValid;
     });
 
     this.setState({ formControls, isFormValid });
@@ -133,7 +131,7 @@ class Auth extends Component {
               Войти
             </Button>
             <Button
-              type="success"
+              type="primary"
               onClick={this.registerHandler}
               disabled={!this.state.isFormValid}
             >
